@@ -14,4 +14,6 @@ DSLR - Canon 550d
 
 buy skipr : https://ali.onl/29SM
 
+MKS_SKIPR git https://github.com/makerbase-mks/MKS-SKIPR
+
 this is not advertising)) I just really liked the board - R3+ together with the MCU, emmc, wifi dongle and mini display at a very low price
