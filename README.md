@@ -2,7 +2,7 @@
 Makerbase Skipr board with Anycubic Mega S 
 
 
-Here will soon be configs, system images, ways to connect and interact with the Makerbase Skipr board
+Here will soon be configs,pinouts, system images, ways to connect and interact with the Makerbase Skipr board
 
 
 Webcam - LOGITECH C922 pro
