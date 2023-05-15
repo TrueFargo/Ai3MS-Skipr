@@ -2,7 +2,7 @@
 Makerbase Skipr board with Anycubic Mega S 
 
 
-Here will soon be configs,pinouts, system images, ways to connect and interact with the Makerbase Skipr board
+Here will be configs,pinouts, system images, ways to connect and interact with the Makerbase Skipr board
 
 
 Webcam - LOGITECH C922 pro
@@ -16,4 +16,3 @@ buy skipr : https://ali.onl/29SM
 
 MKS_SKIPR git https://github.com/makerbase-mks/MKS-SKIPR
 
-this is not advertising)) I just really liked the board - R3+ together with the MCU, emmc, wifi dongle and mini display at a very low price
