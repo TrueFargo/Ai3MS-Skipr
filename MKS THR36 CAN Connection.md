@@ -14,7 +14,9 @@ Similar MCU from makerbase with CAN https://github.com/maz0r/klipper_canbus/blob
 
 Quick summary of steps: 
 
-* 1.1 Make CanBoot for MCU
+
+
+* 1.1 [Prepare CanBoot bootloader for MCU](#prepare-canboot-bootloader-for-mcu)
 * 1.2 Flash CanBoot to MCU with USB-DFU (long press boot)
 * 1.3 Prepare Klipper firmware bin file for MCU 
 * 2.1 Prepare Canboot bootloader for THR
@@ -61,7 +63,7 @@ iface can0 can static
 
 
 	
-install CanBoot
+### install CanBoot
 
 	cd ~
 	git clone https://github.com/Arksine/CanBoot
@@ -95,8 +97,10 @@ But maybe all this is nonsense, the default bootloader is written somewhere else
 
 	
 ## SKIPR MCU prepare
+
 ### Prepare CanBoot bootloader for MCU
-		
+	
+
 	cd ~/CanBoot
 	make menuconfig
 	
