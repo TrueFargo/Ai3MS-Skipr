@@ -24,8 +24,8 @@ Quick summary of steps:
 * 2.2 Flash CanBoot to THR with USB (long press boot)
 * 2.3 Prepare Klipper firmware bin file for THR
 * 3 [Klipper Flash](#klipper-flash)
-* 3.1 Flash Klipper to THR with USB-CanBoot (double reset)
-* 3.2 Flash Klipper to MCU with USB-CanBoot (double reset)
+* 3.1 Flash Klipper to THR with USB cable through CanBoot (double reset)
+* 3.2 Flash Klipper to MCU with USB cable through CanBoot (double reset)
 * 4.1 Run CanBoot script to scan CAN and save UUIDs
 
 
@@ -47,12 +47,12 @@ Quick summary of steps:
 ### Login to PI part of SKIPR
 
 DISABLE KLIPPER SERVICE  
-
-	sudo service klipper stop
-
+```sh
+sudo service klipper stop
+```
 Create or setup Can0 like this:
 
-```
+```sh
 sudo nano /etc/network/interfaces.d/can0
 ```
 ```	
@@ -67,8 +67,10 @@ iface can0 can static
 	
 ### install CanBoot
 
-	cd ~
-	git clone https://github.com/Arksine/CanBoot
+```sh
+cd ~
+git clone https://github.com/Arksine/CanBoot
+```
 
 Install pyserial
 
@@ -81,19 +83,19 @@ or
 
 
 #### Note:
-There is a problem here, since I initially used the Monster8 guide - I flashed the MCU with 32KB offset, which, I think, broke the bootloader that loads the firmware from the flash card, since the default settings recommended by the manufacturer are 48KB offset (so even in the klipper settings specified).
-
-CanBoot at the time when I was flashing it did not have a 48 KB offset option at all. I tried manually setting the address in DFU mode and flashing the klipper, but nothing worked for me.
-
-However, **the DFU-mode of the board works fine (long press the "boot" button), and the flashed canboot bootloader also works fine (double-click the reset button)**.
-If, for some reason, you are disappointed in the toolheads, and decide to return everything as it was, then just compile klipper for USART1, flash the MCU as well, it will be visible by 
-	
-	serial: /dev/ttyS0
-	
-	
-	
-Makerbase has not yet posted the default bootloader for SKIPR, and I decided not to try the monster8 bootloader.
-But maybe all this is nonsense, the default bootloader is written somewhere else, and I just don’t have a suitable flash card (none of the 3 different ones with different file systems fit).
+>There is a problem here, since I initially used the Monster8 guide - I flashed the MCU with 32KB offset, which, I think, broke the bootloader that loads the firmware from the flash card, since the default settings recommended by >the manufacturer are 48KB offset (so even in the klipper settings specified).
+>
+>CanBoot at the time when I was flashing it did not have a 48 KB offset option at all. I tried manually setting the address in DFU mode and flashing the klipper, but nothing worked for me.
+>
+>However, **the DFU-mode of the board works fine (long press the "boot" button), and the flashed canboot bootloader also works fine (double-click the reset button)**.
+>If, for some reason, you are disappointed in the toolheads, and decide to return everything as it was, then just compile klipper for USART1, flash the MCU as well, it will be visible by 
+>	
+>	serial: /dev/ttyS0
+>	
+>	
+>	
+>Makerbase has not yet posted the default bootloader for SKIPR, and I decided not to try the monster8 bootloader.
+>But maybe all this is nonsense, the default bootloader is written somewhere else, and I just don’t have a suitable flash card (none of the 3 different ones with different file systems fit).
 
 # Flash at your own risk!
 
@@ -102,14 +104,17 @@ But maybe all this is nonsense, the default bootloader is written somewhere else
 
 ### Prepare CanBoot bootloader for MCU
 	
-
-	cd ~/CanBoot
-	make menuconfig
+```sh
+cd ~/CanBoot
+make menuconfig
+```
 	
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/a3d06e82-8513-4c47-b317-d3880491ca69)
 
- 	make clean
-	make
+```sh
+ make clean
+make
+```
       
 Switch SKIPR MCU to DFU mode for flashing (hold boot0 button on mcu part)
 
@@ -125,7 +130,7 @@ lsusb
 
 And now MCU part of the SKIPR board connected via USB is displayed in the DFU mode
 #### Flash Canboot to MCU SKIPR
-```
+```sh
 sudo dfu-util -a 0 -D ~/CanBoot/out/canboot.bin --dfuse-address 0x08000000:force:mass-erase:leave -d 0483:df11
 ```
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/a8fc37f9-4f31-4781-b3fd-47e918f43327)
@@ -135,15 +140,17 @@ sudo dfu-util -a 0 -D ~/CanBoot/out/canboot.bin --dfuse-address 0x08000000:force
 
 			
 ### Prepare Klipper for MCU
-			
-	cd ~/klipper
-	make menuconfig
+```sh		
+cd ~/klipper
+make menuconfig
+```
 	
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/83426c18-1f5f-4cc2-b921-a0435596ddfa)	
 setup f407 32kb USB-to-Can (USB on PA11,PA12); CAN bus on PB12,PB13; 500k speed, 
-	
-	make clean
-	make
+```sh	
+make clean
+make
+```
 compile, rename klipper.bin file and move somewhere *(for example, /home/mks/fw/klipperMCUCAN32k500k.bin)*
 			
 ## THR toolhead prepare
@@ -153,13 +160,13 @@ compile, rename klipper.bin file and move somewhere *(for example, /home/mks/fw/
 Hold boot button on THR before power on SKIPR *(If you didn't do it at the beginning, or reset it since then)*
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/dcc1cf09-9230-4e22-ba57-a8fdb28237f2)
 
-
-	lsusb
-	
+```sh
+lsusb
+```	
 
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/1cab9063-92b9-4b93-8024-1f0ba07b9d1f)
 
-```
+```sh
 cd ~/CanBoot
 make menuconfig
 ```
@@ -168,13 +175,13 @@ make menuconfig
 
 setup rp2040; flash chip w25q080;no deployment; usb comunication(for bootloader) compile and flash trough boot (hold boot before powering on)
 
-```
+```sh
 make clean
 make
 ```
 ### Flash Canboot bootloader for THR
 
-```
+```sh
 sudo make flash FLASH_DEVICE=2e8a:0003
 ```	
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/8eef8adb-fbdd-43f7-8d5f-c1dcb138a4ff)
@@ -187,16 +194,17 @@ now with double reset on both board we can see 2 device in Canboot mode
 	
 ### Prepare Klipper for THR
 
-	cd ~/klipper
-	make menuconfig
-
+```sh
+cd ~/klipper
+make menuconfig
+```
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/67c5f63c-0fb3-48de-b955-a2d0e0aded88)
 
 setup rp2040; 16kb; offset; ,CAN on 8,9; 500k speed; 
-
-	make clean
-	make
-			
+```sh
+make clean
+make
+```			
 compile; rename klipper.bin file and move
 			
 ## Klipper Flash
@@ -205,7 +213,7 @@ compile; rename klipper.bin file and move
 Here is what you should see:
 
 	
-```	
+```sh
 mks@mkspi:~/klipper$ python3 ~/CanBoot/scripts/flash_can.py -d  /dev/serial/by-id/usb-CanBoot_rp2040_35CE4D1503954858-if00 -f ~/fw/klipperTHRCAN16500.bin
 Attempting to connect to bootloader
 CanBoot Connected
@@ -230,7 +238,7 @@ CAN Flash Success
 	~/klipper$ python3 ~/CanBoot/scripts/flash_can.py -d  /dev/serial/by-id/usb-CanBoot_stm32f407xx_1D0038001250335330373220-if00 -f ~/fw/klipperMCUCAN32k500k.bin
 
 output:
-```
+```sh
 Attempting to connect to bootloader
 CanBoot Connected
 Protocol Version: 1.0.0
@@ -251,35 +259,37 @@ CAN Flash Success
 ```
 
 ### Run CanBoot script to scan CAN
-```
+```sh
 ~/klipper$ ~/klippy-env/bin/python ~/klipper/scripts/canbus_query.py can0
 ```
 	
 output:
-
-	Found canbus_uuid=92feb5cf8e71, Application: Klipper
-	Found canbus_uuid=3662e33915a1, Application: Klipper
-	Total 2 uuids found
+```sh
+Found canbus_uuid=92feb5cf8e71, Application: Klipper
+Found canbus_uuid=3662e33915a1, Application: Klipper
+Total 2 uuids found
+```
 
 #### Save these IDs as soon as you see them for the first time! 
 ##### They do not change, but after the first request, subsequent querys give out "0 uuid found" and,in my case, CAN bus drops and does not turn on until the board is physically turned on / off or a reset is pressed on the MCU board (FIRMWARE_RESTART not working with this). Despite this, the Klipper sees and controls all boards absolutely normally.
 
 Klipper should now see the boards and you can use uuid as the address in printer.cfg 
 
-	
-	[mcu]
-	# The hardware use USART1 PA10/PA9 connect to RK3328
-	# serial: /dev/serial/by-id/usb-Klipper_stm32f407xx_4D0045001850314335393520-if00
-	# serial: /dev/ttyS0           	#default usart
-	canbus_uuid: 92feb5cf8e71      	#after canboot flashing and klipper through canboot flashing
-	;restart_method: rpi_usb 		#for can bus not needed
-	
-	[mcu rpi]       
-	serial: /tmp/klipper_host_mcu
-	
-	[mcu MKS_THR]
-	# serial: /dev/serial/by-id/usb-Klipper_rp2040_35CE4D1503954858-if00 ##usb id
-	canbus_uuid: 3662e33915a1
+```yaml	
+[mcu]
+# The hardware use USART1 PA10/PA9 connect to RK3328
+# serial: /dev/serial/by-id/usb-Klipper_stm32f407xx_4D0045001850314335393520-if00
+# serial: /dev/ttyS0           	#default usart
+canbus_uuid: 92feb5cf8e71      	#after canboot flashing and klipper through canboot flashing
+;restart_method: rpi_usb 		#for can bus not needed
+
+[mcu rpi]       
+serial: /tmp/klipper_host_mcu
+
+[mcu MKS_THR]
+# serial: /dev/serial/by-id/usb-Klipper_rp2040_35CE4D1503954858-if00 ##usb id
+canbus_uuid: 3662e33915a1
+```
 	
 	
 	
@@ -291,7 +301,7 @@ I setup 2209 as usual in uart mode
 ### THR show shows the temperature is 5 degrees less than it should 
 *(Easy to check when the printer is idle for a long time - everything should be at room temperature - both the bed and the nozzle)*
 Here config with generic b3950 thermistor:
-```
+```yaml
 
 ## custom table for THR thermistor from MKS with with a little tweak & extruder part of cfg
 [adc_temperature extruder]
