@@ -112,7 +112,7 @@ make menuconfig
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/a3d06e82-8513-4c47-b317-d3880491ca69)
 
 ```sh
- make clean
+make clean
 make
 ```
       
