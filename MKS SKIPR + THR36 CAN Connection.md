@@ -6,15 +6,16 @@ Each board needs two compilation and flashing processes - CanBoot and klipper.
 * Klipper is Klipper
 
 
-Mellow has very good guides for their toolheads, like this one (rp2040 just like a THR36) : https://mellow-3d.github.io/fly-sb2040_canboot_can.html 
+Mellow has very good guides for their toolheads, like [this one](https://mellow-3d.github.io/fly-sb2040_canboot_can.html) (rp2040 just like a THR36)
 
-Similar MCU from makerbase with CAN https://github.com/maz0r/klipper_canbus/blob/main/controller/monster8v2.md
+Very good discussion about [SKIPR CAN bus](https://klipper.discourse.group/t/mks-skipr-can-bus/5377/1)
 
-
-
-Quick summary of steps: 
+Guide for [similar MCU from makerbase with CAN](https://github.com/maz0r/klipper_canbus/blob/main/controller/monster8v2.md)
 
 
+
+### Quick summary of steps: 
+* 0 **VOID YOUR GARRANTY**
 * 1 [MCU prepare](#skipr-mcu-prepare)
 * 1.1 Prepare CanBoot bootloader for MCU
 * 1.2 Flash CanBoot to MCU with USB-DFU (long press boot)
@@ -297,6 +298,18 @@ canbus_uuid: 3662e33915a1
 
 ### Which TMC? 2209 or 2208?
 I setup 2209 as usual in uart mode
+
+```yaml
+[tmc2209 extruder]            # in thr description 2209 but in github cfg 2208
+uart_pin: MKS_THR:gpio6
+run_current: 0.250
+# hold_current: 0.2
+#sense_resistor: 0.110
+#stealthchop_threshold: 0
+interpolate: True
+```
+
+
 
 ### THR show shows the temperature is 5 degrees less than it should 
 *(Easy to check when the printer is idle for a long time - everything should be at room temperature - both the bed and the nozzle)*
