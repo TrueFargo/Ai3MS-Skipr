@@ -15,13 +15,15 @@ Similar MCU from makerbase with CAN https://github.com/maz0r/klipper_canbus/blob
 Quick summary of steps: 
 
 
-
-* 1.1 [Prepare CanBoot bootloader for MCU](#prepare-canboot-bootloader-for-mcu)
+* 1 [MCU prepare](#skipr-mcu-prepare)
+* 1.1 Prepare CanBoot bootloader for MCU
 * 1.2 Flash CanBoot to MCU with USB-DFU (long press boot)
 * 1.3 Prepare Klipper firmware bin file for MCU 
+* 2 [THR toolhead prepare](#thr-toolhead-prepare)
 * 2.1 Prepare Canboot bootloader for THR
 * 2.2 Flash CanBoot to THR with USB (long press boot)
 * 2.3 Prepare Klipper firmware bin file for THR
+* 3 [Klipper Flash](#klipper-flash)
 * 3.1 Flash Klipper to THR with USB-CanBoot (double reset)
 * 3.2 Flash Klipper to MCU with USB-CanBoot (double reset)
 * 4.1 Run CanBoot script to scan CAN and save UUIDs
@@ -197,7 +199,8 @@ setup rp2040; 16kb; offset; ,CAN on 8,9; 500k speed;
 			
 compile; rename klipper.bin file and move
 			
-			
+## Klipper Flash
+
 ### Flash Klipper to THR,
 Here is what you should see:
 
