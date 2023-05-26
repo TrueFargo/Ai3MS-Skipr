@@ -5,17 +5,39 @@ Each board needs two compilation and flashing processes - CanBoot and klipper.
 * CanBoot is a bootloader that helps us flash, klipper is flashed through it.
 * Klipper is Klipper
 
+
 Mellow has very good guides for their toolheads, like this one (rp2040 just like a THR36) : https://mellow-3d.github.io/fly-sb2040_canboot_can.html 
 
 Similar MCU from makerbase with CAN https://github.com/maz0r/klipper_canbus/blob/main/controller/monster8v2.md
 
+
+
+Quick summary of steps: 
+
+* 1.1 Make CanBoot for MCU
+* 1.2 Flash CanBoot to MCU with USB-DFU (long press boot)
+* 1.3 Prepare Klipper firmware bin file for MCU 
+* 2.1 Prepare Canboot bootloader for THR
+* 2.2 Flash CanBoot to THR with USB (long press boot)
+* 2.3 Prepare Klipper firmware bin file for THR
+* 3.1 Flash Klipper to THR with USB-CanBoot (double reset)
+* 3.2 Flash Klipper to MCU with USB-CanBoot (double reset)
+* 4.1 Run CanBoot script to scan CAN and save UUIDs
+
+
 ## Instructions
 * Klipper version must be at least v0.11.0-194-g1a24e7c5!
-* Connect host part of SKIPR to mcu part
+* Connect host part of SKIPR to MCU part with USB (2.0 in my case enough)
+ 
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/e1a0dc8e-f1d4-4a7d-966d-2cd78cfa99d2)
+
 * Connect host Skipr to THR through USB and CAN (jumper USB power - off)  (*USB cable for the toolhead is only needed for flashing the firmware*)
+
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/7bad5296-12a6-43c9-967c-01e1cf2cf306)
+
 ###### *After several attempts, I still could not flash the toolhead through CAN, even when it worked properly in klipper firmware with only a CAN connection.*
 * Hold boot button on THR before power on
-![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/7bad5296-12a6-43c9-967c-01e1cf2cf306)
+
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/dcc1cf09-9230-4e22-ba57-a8fdb28237f2)
 
 ### Login to PI part of SKIPR
@@ -73,16 +95,14 @@ But maybe all this is nonsense, the default bootloader is written somewhere else
 
 	
 ## SKIPR MCU prepare
-### CanBoot bootloader for MCU
+### Prepare CanBoot bootloader for MCU
 		
-	cd CanBoot
+	cd ~/CanBoot
 	make menuconfig
 	
-  ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/a3d06e82-8513-4c47-b317-d3880491ca69)
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/a3d06e82-8513-4c47-b317-d3880491ca69)
 
-  
-
-	make clean
+ 	make clean
 	make
       
 Switch SKIPR MCU to DFU mode for flashing (hold boot0 button on mcu part)
@@ -91,11 +111,13 @@ Switch SKIPR MCU to DFU mode for flashing (hold boot0 button on mcu part)
 
 Check usb
 
-  lsusb 
+```
+lsusb 
+```
 
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/e9e9b619-52a2-43b5-ab20-d3de861abe45)
 
-And now the part of the SKIPR board connected via USB is displayed in the DFU mode
+And now MCU part of the SKIPR board connected via USB is displayed in the DFU mode
 #### Flash Canboot to MCU SKIPR
 ```
 sudo dfu-util -a 0 -D ~/CanBoot/out/canboot.bin --dfuse-address 0x08000000:force:mass-erase:leave -d 0483:df11
@@ -106,7 +128,7 @@ sudo dfu-util -a 0 -D ~/CanBoot/out/canboot.bin --dfuse-address 0x08000000:force
 *At this point in the installation, there is no klipper firmware on SKIPR, only a CanBoot bootloader, and in this case, I have a canbus UUID displayed on every request.*
 
 			
-### Klipper for MCU
+### Prepare Klipper for MCU
 			
 	cd ~/klipper
 	make menuconfig
@@ -120,7 +142,7 @@ compile, rename klipper.bin file and move somewhere *(for example, /home/mks/fw/
 			
 ## THR toolhead prepare
 			
-### Canboot bootloader for THR
+### Prepare Canboot bootloader for THR
 
 Hold boot button on THR before power on SKIPR *(If you didn't do it at the beginning, or reset it since then)*
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/dcc1cf09-9230-4e22-ba57-a8fdb28237f2)
@@ -130,25 +152,40 @@ Hold boot button on THR before power on SKIPR *(If you didn't do it at the begin
 	
 
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/1cab9063-92b9-4b93-8024-1f0ba07b9d1f)
-	
+
+```
+cd ~/CanBoot
+make menuconfig
+```
+
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/e86ae91d-7f0f-4674-ad8b-5d2f0cb47cd6)
+
 setup rp2040; flash chip w25q080;no deployment; usb comunication(for bootloader) compile and flash trough boot (hold boot before powering on)
-	
-  sudo make flash FLASH_DEVICE=2e8a:0003
-	
+
+```
+make clean
+make
+```
+### Flash Canboot bootloader for THR
+
+```
+sudo make flash FLASH_DEVICE=2e8a:0003
+```	
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/8eef8adb-fbdd-43f7-8d5f-c1dcb138a4ff)
 
 
-now with double reset can see 2 device in Canboot mode
+now with double reset on both board we can see 2 device in Canboot mode
 		
 	~/klipper$ ls /dev/serial/by-id/*
 	/dev/serial/by-id/usb-CanBoot_rp2040_35CE4D1503954858-if00  /dev/serial/by-id/usb-CanBoot_stm32f407xx_1D0038001250335330373220-if00
 	
-### Klipper for THR
+### Prepare Klipper for THR
 
 	cd ~/klipper
 	make menuconfig
 
-![image]
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/67c5f63c-0fb3-48de-b955-a2d0e0aded88)
+
 setup rp2040; 16kb; offset; ,CAN on 8,9; 500k speed; 
 
 	make clean
@@ -157,7 +194,7 @@ setup rp2040; 16kb; offset; ,CAN on 8,9; 500k speed;
 compile; rename klipper.bin file and move
 			
 			
-Flash Klipper to THR,
+### Flash Klipper to THR,
 Here is what you should see:
 
 	
@@ -181,7 +218,7 @@ Verifying (block count = 456)...
 Verification Complete: SHA = F1E1C2F4CFF37C2C0FEF6AD5A32C80419D477710
 CAN Flash Success
 ```			
-#### Flash MCU SKIPR
+### Flash Klipper to MCU SKIPR
 
 	~/klipper$ python3 ~/CanBoot/scripts/flash_can.py -d  /dev/serial/by-id/usb-CanBoot_stm32f407xx_1D0038001250335330373220-if00 -f ~/fw/klipperMCUCAN32k500k.bin
 
@@ -206,7 +243,7 @@ Verification Complete: SHA = DD9C0FFDA8AA60754BEB82DC665919F7F0C84B7E
 CAN Flash Success
 ```
 
-Run CanBoot script to scan CAN
+### Run CanBoot script to scan CAN
 ```
 ~/klipper$ ~/klippy-env/bin/python ~/klipper/scripts/canbus_query.py can0
 ```
@@ -240,12 +277,16 @@ Klipper should now see the boards and you can use uuid as the address in printer
 	
 	
 ## Issues
+
+### Which TMC? 2209 or 2208?
+I setup 2209 as usual in uart mode
+
 ### THR show shows the temperature is 5 degrees less than it should 
 *(Easy to check when the printer is idle for a long time - everything should be at room temperature - both the bed and the nozzle)*
 Here config with generic b3950 thermistor:
 ```
 
-## custom table for THR thermistor from MKS with with a little tweak
+## custom table for THR thermistor from MKS with with a little tweak & extruder part of cfg
 [adc_temperature extruder]
 temperature1:27
 voltage1:3.151
@@ -270,7 +311,7 @@ voltage10:0.098
 
 
 [extruder]                          ## SHERPA mini
-# step_pin: PB5						#SKIPR
+# step_pin: PB5			    #SKIPR
 # dir_pin: PB4                      #SKIPR
 # enable_pin: !PB6                  #SKIPR
 step_pin: MKS_THR:gpio5             # thr36
@@ -283,8 +324,8 @@ rotation_distance: 22.67895         #for 5mm Shaft Driven Bondtech gearsets
 
 nozzle_diameter: 0.400
 filament_diameter: 1.750
-pressure_advance = 0.041200   
-pressure_advance_smooth_time: 0.001
+pressure_advance = 0.041200   		; do your measure
+pressure_advance_smooth_time: 0.001	; do your measure
 
 
 # heater_pin: PB1                   # HE0 skipr
@@ -294,9 +335,9 @@ pressure_advance_smooth_time: 0.001
 heater_pin: MKS_THR:gpio0           # thr36
 sensor_pin: MKS_THR:gpio26          # thr36
 
-sensor_type: extruder           	# thr36 thermistor corrections
+sensor_type: extruder           			# thr36 thermistor corrections
 adc_voltage: 3.3					# thr36 thermistor corrections
-voltage_offset: 0.00				# thr36 thermistor corrections
+voltage_offset: 0.00					# thr36 thermistor corrections
 #   The ADC voltage offset (in Volts). The default is 0.
 #pullup_resistor:4700
 #inline_resistor:0
