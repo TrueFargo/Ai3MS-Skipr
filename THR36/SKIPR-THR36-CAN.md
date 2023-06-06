@@ -35,6 +35,7 @@ Guide for [similar MCU from makerbase with CAN](https://github.com/maz0r/klipper
 * Connect host part of SKIPR to MCU part with USB (2.0 in my case enough)
  
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/e1a0dc8e-f1d4-4a7d-966d-2cd78cfa99d2)
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/7bbb817c-8692-42b1-a28e-bc19cfa152b2)
 
 * Connect host Skipr to THR through USB and CAN (jumper USB power - off)  (*USB cable for the toolhead is only needed for flashing the firmware*)
 
