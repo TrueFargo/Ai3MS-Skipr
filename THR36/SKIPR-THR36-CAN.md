@@ -160,7 +160,7 @@ compile, rename klipper.bin file and move somewhere *(for example, /home/mks/fw/
 			
 ### Prepare Canboot bootloader for THR
 
-Hold boot button on THR before power on SKIPR *(If you didn't do it at the beginning, or reset it since then)*
+Hold boot button on THR before power on SKIPR *(If you didn't do it at the beginning, or reset it since then. If not showing, power cycle SKIPR and try hold boot again)*
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/dcc1cf09-9230-4e22-ba57-a8fdb28237f2)
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/blob/main/THR36/assets/THR36Boot.png)
 
@@ -388,7 +388,10 @@ max_extrude_only_velocity: 75.0
 max_extrude_only_accel: 1500
 ```
 	
-	
+### Nothing works at all!
+
+Check your wires and connections, especially, at SKIPR part. I use dupont connectors, each cut from one corner.
+
 	
 Other configs and pinouts can be found on the MKS github
 	
