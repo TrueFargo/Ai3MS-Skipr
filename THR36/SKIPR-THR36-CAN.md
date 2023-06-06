@@ -40,12 +40,12 @@ Guide for [similar MCU from makerbase with CAN](https://github.com/maz0r/klipper
 * Connect host Skipr to THR through USB and CAN (jumper USB power - off)  (*USB cable for the toolhead is only needed for flashing the firmware*)
 
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/7bad5296-12a6-43c9-967c-01e1cf2cf306)
-
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/blob/main/THR36/assets/THR36_USB_JUMPER.png)
 ###### *After several attempts, I still could not flash the toolhead through CAN, even when it worked properly in klipper firmware with only a CAN connection.*
 * Hold boot button on THR before power on
 
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/dcc1cf09-9230-4e22-ba57-a8fdb28237f2)
-
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/blob/main/THR36/assets/THR36Boot.png)
 ### Login to PI part of SKIPR
 
 DISABLE KLIPPER SERVICE  
@@ -112,7 +112,7 @@ make menuconfig
 ```
 	
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/a3d06e82-8513-4c47-b317-d3880491ca69)
-
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/blob/main/THR36/assets/SKIPR_CanBootCFG.png)
 ```sh
 make clean
 make
@@ -121,7 +121,7 @@ make
 Switch SKIPR MCU to DFU mode for flashing (hold boot0 button on mcu part)
 
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/fe5d2467-96dc-43b5-b466-8eff07270983)
-
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/blob/main/THR36/assets/SKIPR%20BOOT.png)
 Check usb
 
 ```
@@ -129,14 +129,14 @@ lsusb
 ```
 
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/e9e9b619-52a2-43b5-ab20-d3de861abe45)
-
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/blob/main/THR36/assets/SKIPR_MCU_DFU.png)
 And now MCU part of the SKIPR board connected via USB is displayed in the DFU mode
 #### Flash Canboot to MCU SKIPR
 ```sh
 sudo dfu-util -a 0 -D ~/CanBoot/out/canboot.bin --dfuse-address 0x08000000:force:mass-erase:leave -d 0483:df11
 ```
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/a8fc37f9-4f31-4781-b3fd-47e918f43327)
-
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/blob/main/THR36/assets/SKIPR_MCU_Canboot_Flashing.png)
 
 *At this point in the installation, there is no klipper firmware on SKIPR, only a CanBoot bootloader, and in this case, I have a canbus UUID displayed on every request.*
 
@@ -147,7 +147,8 @@ cd ~/klipper
 make menuconfig
 ```
 	
-![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/83426c18-1f5f-4cc2-b921-a0435596ddfa)	
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/83426c18-1f5f-4cc2-b921-a0435596ddfa)
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/blob/main/THR36/assets/SKIPR_MCU_Klipper_setup.png)
 setup f407 32kb USB-to-Can (USB on PA11,PA12); CAN bus on PB12,PB13; 500k speed, 
 ```sh	
 make clean
@@ -161,12 +162,14 @@ compile, rename klipper.bin file and move somewhere *(for example, /home/mks/fw/
 
 Hold boot button on THR before power on SKIPR *(If you didn't do it at the beginning, or reset it since then)*
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/dcc1cf09-9230-4e22-ba57-a8fdb28237f2)
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/blob/main/THR36/assets/THR36Boot.png)
 
 ```sh
 lsusb
 ```	
 
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/1cab9063-92b9-4b93-8024-1f0ba07b9d1f)
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/blob/main/THR36/assets/THR36_LONGBOOT.png)
 
 ```sh
 cd ~/CanBoot
@@ -174,6 +177,7 @@ make menuconfig
 ```
 
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/e86ae91d-7f0f-4674-ad8b-5d2f0cb47cd6)
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/blob/main/THR36/assets/THR36_CanBoot_Setup.png)
 
 setup rp2040; flash chip w25q080;no deployment; usb comunication(for bootloader) compile and flash trough boot (hold boot before powering on)
 
@@ -187,7 +191,7 @@ make
 sudo make flash FLASH_DEVICE=2e8a:0003
 ```	
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/8eef8adb-fbdd-43f7-8d5f-c1dcb138a4ff)
-
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/blob/main/THR36/assets/THR36_CanBoot_flash.png)
 
 now with double reset on both board we can see 2 device in Canboot mode
 		
@@ -201,6 +205,7 @@ cd ~/klipper
 make menuconfig
 ```
 ![image](https://github.com/TrueFargo/Ai3MS-Skipr/assets/115958663/67c5f63c-0fb3-48de-b955-a2d0e0aded88)
+![image](https://github.com/TrueFargo/Ai3MS-Skipr/blob/main/THR36/assets/THR36_Klipper_cfg.png)
 
 setup rp2040; 16kb; offset; ,CAN on 8,9; 500k speed; 
 ```sh
