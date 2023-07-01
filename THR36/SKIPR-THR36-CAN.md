@@ -15,7 +15,8 @@ Guide for [similar MCU from makerbase with CAN](https://github.com/maz0r/klipper
 
 
 ### Quick summary of steps: 
-* 0 **VOID YOUR GARRANTY**
+* 0 **VOID YOUR GARRANTY** and think about USB for data transfer. [Here couple words about this](https://os.ratrig.com/blog/no-you-dont-want-to-use-can/)
+* 0.1 If you really need a CAN bus, or you are experimenting, then we continue
 * 1 [MCU prepare](#skipr-mcu-prepare)
 * 1.1 Prepare CanBoot bootloader for MCU
 * 1.2 Flash CanBoot to MCU with USB-DFU (long press boot)
@@ -335,15 +336,17 @@ voltage4:2.354
 temperature5:143
 voltage5:1.029
 temperature6:171
-voltage6:0.632
+voltage6:0.63
 temperature7:195
-voltage7:0.401
-temperature8:225
-voltage8:0.250
-temperature9:255
-voltage9:0.159
-temperature10:287
-voltage10:0.098
+voltage7:0.395
+temperature8:210
+voltage8:0.288
+temperature9:225
+voltage9:0.234
+temperature10:255
+voltage10:0.142
+temperature11:287
+voltage11:0.098
 
 
 [extruder]                          ## SHERPA mini
@@ -390,7 +393,7 @@ max_extrude_only_accel: 1500
 	
 ### Nothing works at all!
 
-Check your wires and connections, especially, at SKIPR part. I use dupont connectors, each cut from one corner.
+Check your wires and connections, especially, at SKIPR part. I use dupont connectors, each cut from one corner. Also, think about usb connection for data, some people say it more stable and you easily can solder it to THR. For some slinger beds THR good working on CAN bus, but more complex coreXY may need a higher bitrates.
 
 	
 Other configs and pinouts can be found on the MKS github
